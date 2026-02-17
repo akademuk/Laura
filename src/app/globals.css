@@ -1,26 +1,205 @@
 @import "tailwindcss";
 
+@theme {
+  --font-unbounded: Unbounded, sans-serif;
+  --font-inter: "Inter Tight", sans-serif;
+  --font-playfair: "Playfair Display", serif;
+  --font-montserrat: "Montserrat", sans-serif;
+  --font-comic: "Comic Neue", cursive; 
+  --font-courier: "Courier Prime", monospace;
+
+  --text-giant: clamp(3rem, 9vw, 12rem);
+  --leading-none: 1;
+  --tracking-tighter: -0.05em;
+  
+  /* Fallback/Base Colors - actual usage via CSS vars */
+  --color-brand-neon: #D1F232;
+  --color-brand-black: #000000;
+  --color-brand-white: #FFFFFF;
+}
+
+/* 
+  Global CSS Variables for Theming
+  Format:
+  --bg: Background Color
+  --fg: Foreground/Text Color
+  --accent: Primary Brand Color (Buttons, Highlights)
+  --border-color: Color of structural borders
+  --border-width: Thickness of borders
+*/
+
+/* 1. NEO-BRUTALISM (Default) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #FFFFFF;
+  --fg: #000000;
+  --accent: #D1F232;
+  --secondary: #FF00FF; /* Magenta pop */
+  
+  --font-h: var(--font-unbounded);
+  --font-b: var(--font-inter);
+  
+  --border-color: #000000;
+  /* Reduced border width based on user feedback about "Lords" (Borders) being messy */
+  --border-width: 1px; 
+  --radius: 0px;
+  --shadow: 4px 4px 0px 0px #000000;
+  
+  --mix-blend: difference;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* 2. LUXURY (Dark, Gold, Serif) */
+[data-theme='luxury'] {
+  --bg: #0F0F0F;
+  --fg: #E5D0AC; /* Muted Gold */
+  --accent: #FFFFFF;
+  --secondary: #333333;
+
+  --font-h: var(--font-playfair);
+  --font-b: var(--font-montserrat);
+
+  --border-color: #333333;
+  --border-width: 1px;
+  --radius: 0px;
+  --shadow: none;
+  
+  --mix-blend: normal;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* 3. MINIMAL (Clean, Grey, Sans) */
+[data-theme='minimal'] {
+  --bg: #F4F4F5;
+  --fg: #18181B;
+  --accent: #71717A; /* Zinc-500 */
+  --secondary: #E4E4E7;
+
+  --font-h: var(--font-inter);
+  --font-b: var(--font-inter);
+
+  --border-color: transparent;
+  --border-width: 0px;
+  --radius: 8px; /* Soft corners */
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  
+  --mix-blend: normal;
 }
+
+/* 4. POP (Vibrant, Comic, Bold) */
+[data-theme='pop'] {
+  --bg: #FFFF00; /* Yellow */
+  --fg: #0000FF; /* Blue */
+  --accent: #FF0000; /* Red */
+  --secondary: #00FF00; /* Green */
+
+  --font-h: var(--font-comic);
+  --font-b: var(--font-comic);
+
+  --border-color: #000000;
+  --border-width: 4px;
+  --radius: 20px;
+  --shadow: 6px 6px 0px 0px #000000;
+  
+  --mix-blend: hard-light;
+}
+
+/* 5. RETRO (Terminal, Green, Monospace) */
+[data-theme='retro'] {
+  --bg: #0D1611; /* Dark Green/Black */
+  --fg: #4AF626; /* Terminal Green */
+  --accent: #4AF626;
+  --secondary: #1F3A26;
+
+  --font-h: var(--font-courier);
+  --font-b: var(--font-courier);
+
+  --border-color: #4AF626;
+  --border-width: 1px;
+  --radius: 0px;
+  --shadow: 0 0 10px rgba(74, 246, 38, 0.5); /* Glowing effect */
+  
+  --mix-blend: screen;
+}
+
+/* Base Utility Classes Mapped to Promoted Variables */
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-b);
+  transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-h);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Standard Utility classes for Tailwind usage */
+@utility bg-theme-bg {
+  background-color: var(--bg);
+}
+@utility text-theme-fg {
+  color: var(--fg);
+}
+@utility border-theme {
+  border-color: var(--border-color);
+  border-width: var(--border-width);
+}
+@utility rounded-theme {
+  border-radius: var(--radius);
+}
+@utility shadow-theme {
+  box-shadow: var(--shadow);
+}
+@utility font-theme-h {
+  font-family: var(--font-h);
+}
+@utility font-theme-b {
+  font-family: var(--font-b);
+}
+
+/* Specific component overrides and helpers */
+.border-theme {
+  border-color: var(--border-color);
+  border-width: var(--border-width);
+}
+
+@utility text-outline-theme {
+    -webkit-text-stroke: 2px var(--fg);
+    color: transparent;
+}
+
+/* Lenis Scroll Defaults */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Global Grain/Noise Overlay */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
 }
