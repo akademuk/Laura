@@ -51,12 +51,15 @@ export default function TheCore() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.1 }}
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-[var(--font-h)] font-bold text-[var(--fg)] leading-[1.05] mb-8">
-              Не просто курс —{' '}
+            <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-[var(--font-h)] font-bold text-[var(--fg)] leading-[1.05] mb-4">
+              Не курс —{' '}
               <span className="italic font-normal text-[var(--muted)]">
-                трансформація
+                система
               </span>
             </h2>
+            <p className="text-sm md:text-base text-[var(--muted)] mb-8 font-light">
+              Контраст між академічною освітою та реальним бізнесом.
+            </p>
 
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-px bg-[var(--border-color)] border border-[var(--border-color)]">
@@ -95,15 +98,18 @@ export default function TheCore() {
           >
             <p className="text-base md:text-lg lg:text-xl text-[var(--muted)] leading-relaxed mb-8 font-light">
               <strong className="text-[var(--fg)] font-semibold">
-                85 навчальних матеріалів.
+                85 навчальних матеріалів. 4 місяці інтенсиву,
               </strong>{' '}
-              4 місяці інтенсиву, що замінюють 5 років університету. Ви не
-              просто вивчаєте інструменти — ви опановуєте роль Marketing
-              Director.
+              що замінюють 5 років університету. Ви не просто вивчаєте
+              інструменти — ви опановуєте роль{' '}
+              <span className="text-[var(--fg)] font-medium">Marketing Director</span>.
             </p>
             <p className="text-base md:text-lg text-[var(--muted)] leading-relaxed mb-10 font-light">
               Це синтез стратегічного мислення, операційного контролю та
-              лідерства, що трансформує хаос у прибуток.
+              лідерства, що{' '}
+              <span className="text-[var(--fg)] font-medium">
+                трансформує хаос у прибуток
+              </span>.
             </p>
 
             {/* Glassmorphism accent card */}
