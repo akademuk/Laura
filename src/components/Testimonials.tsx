@@ -1,10 +1,7 @@
 'use client';
 
-import { useLayoutEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 const testimonials = [
   {
@@ -22,40 +19,45 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
-  const container = useRef(null);
-  
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-    //  gsap.from('.testimonial-card', {
-    //    opacity: 0,
-    //    y: 50,
-    //    stagger: 0.2,
-    //    scrollTrigger: {
-    //      trigger: container.current,
-    //      start: 'top 80%',
-    //    }
-    //  });
-    }, container);
-    return () => ctx.revert();
-  }, []);
+  const container = useRef<HTMLElement>(null);
+  const isInView = useInView(container, { once: true, margin: '-80px' });
 
   return (
-    <section ref={container} className="relative py-20 bg-brand-black text-brand-white border-y border-brand-neon">
-      <div className="max-w-7xl mx-auto px-4 md:px-12">
-        <h2 className="text-[clamp(3rem,8vw,8rem)] font-bold uppercase leading-[0.8] mb-20 text-center tracking-tighter">
-          Відгуки <span className="text-brand-neon">*</span>
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <section
+      ref={container}
+      className="relative py-24 md:py-36 bg-[var(--bg)] border-y border-[var(--border-color)]"
+      aria-label="Відгуки студентів"
+    >
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          className="text-3xl md:text-5xl lg:text-6xl font-[var(--font-h)] font-bold text-[var(--fg)] leading-[1.1] mb-16 md:mb-20 text-center"
+        >
+          Відгуки <span className="text-[var(--muted)] italic">студентів</span>
+        </motion.h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {testimonials.map((t, i) => (
-            <div key={i} className="testimonial-card border border-brand-neon/50 p-8 hover:bg-brand-neon/10 transition-colors duration-300 backdrop-blur-sm">
-              <p className="text-xl md:text-2xl mb-8 font-light italic">"{t.text}"</p>
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 40 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: i * 0.15 }}
+              className="border border-[var(--border-color)] p-8 hover:border-[var(--fg)] transition-colors duration-300"
+            >
+              <p className="text-base md:text-lg text-[var(--muted)] mb-8 font-light italic leading-relaxed">
+                &ldquo;{t.text}&rdquo;
+              </p>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-brand-neon border border-brand-white flex items-center justify-center text-brand-black font-bold">
+                <div className="w-10 h-10 rounded-full bg-[var(--fg)] text-[var(--bg)] flex items-center justify-center text-sm font-bold">
                   {t.name[0]}
                 </div>
-                <span className="text-lg font-bold uppercase tracking-wider">{t.name}</span>
+                <span className="text-sm font-medium text-[var(--fg)] uppercase tracking-wider">
+                  {t.name}
+                </span>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

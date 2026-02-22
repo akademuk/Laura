@@ -1,42 +1,27 @@
 'use client';
 
 import { useTheme } from './ThemeProvider';
-import { motion } from 'framer-motion';
+import { Sun, Moon } from 'lucide-react';
 
+/**
+ * Compact theme toggle button (dark ↔ light).
+ * Can be placed anywhere — Header already includes its own toggle,
+ * so this component is available for other UIs if needed.
+ */
 export default function ThemeSwitcher() {
-  const { theme, setTheme } = useTheme();
-  
-  const themes = [
-    { id: 'neo', label: 'NEO', color: '#D1F232' },
-    { id: 'luxury', label: 'LUX', color: '#C5A065' },
-    { id: 'minimal', label: 'MIN', color: '#f5f5f5' },
-    { id: 'pop', label: 'POP', color: '#FF00FF' },
-    { id: 'retro', label: 'RTR', color: '#FF7F50' }
-  ];
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="fixed top-24 right-4 z-[100] flex flex-col gap-2 p-2 bg-black/80 backdrop-blur-md rounded-lg shadow-2xl border border-white/20">
-      <span className="text-white text-xs font-mono text-center uppercase mb-1">Theme</span>
-      {themes.map((t) => (
-        <button
-          key={t.id}
-          onClick={() => setTheme(t.id as any)}
-          className={`relative w-10 h-10 rounded-full flex items-center justify-center font-bold text-[10px] transition-all duration-300 ${
-            theme === t.id ? 'scale-110 ring-2 ring-white z-10' : 'opacity-70 hover:opacity-100 hover:scale-105'
-          }`}
-          style={{ backgroundColor: t.id === 'neo' ? '#000' : t.color, color: t.id === 'neo' ? '#D1F232' : (t.id === 'minimal' ? '#000' : '#fff') }}
-          title={t.label}
-        >
-             {theme === t.id && (
-                <motion.div 
-                    layoutId="active-theme" 
-                    className="absolute inset-0 rounded-full border-2 border-white"
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                />
-             )}
-          {t.label}
-        </button>
-      ))}
-    </div>
+    <button
+      onClick={toggleTheme}
+      className="w-10 h-10 flex items-center justify-center rounded-full border border-[var(--border-color)] hover:border-[var(--fg)] transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]"
+      aria-label={theme === 'dark' ? 'Увімкнути світлу тему' : 'Увімкнути темну тему'}
+    >
+      {theme === 'dark' ? (
+        <Sun size={16} className="text-[var(--fg)]" />
+      ) : (
+        <Moon size={16} className="text-[var(--fg)]" />
+      )}
+    </button>
   );
 }

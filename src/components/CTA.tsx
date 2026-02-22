@@ -1,43 +1,129 @@
 'use client';
 
-import { useLayoutEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 
 export default function CTA() {
-  const container = useRef(null);
-  
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.to('.cta-btn', {
-        scale: 1.1,
-        duration: 1,
-        repeat: -1,
-        yoyo: true,
-        ease: 'power2.inOut',
-      });
-    }, container);
-    return () => ctx.revert();
-  }, []);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 3000);
+  };
 
   return (
-    <section ref={container} className="relative py-32 bg-brand-white text-brand-black flex flex-col items-center justify-center text-center">
-      <div className="max-w-4xl px-4">
-        <h2 className="text-[clamp(2.5rem,6vw,6rem)] font-bold uppercase leading-[0.9] text-brand-black mb-8 tracking-tighter">
-          Не гай часу.
-          <br />
-          <span className="text-brand-neon bg-black px-2">Почни зараз.</span>
-        </h2>
-        
-        <p className="text-xl md:text-2xl mb-12 max-w-2xl mx-auto font-light">
-          Це твій шанс створити кар'єру мрії. Натискай на кнопку, і ми підберемо найкращий варіант для тебе.
-        </p>
+    <section
+      id="contact"
+      className="relative py-24 md:py-36 bg-[var(--bg)] overflow-hidden"
+      aria-label="Заявка на доступ"
+    >
+      {/* Decorative top accent */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-px bg-[var(--fg)] opacity-10" />
 
-        <a href="#register" className="cta-btn inline-block bg-brand-neon hover:bg-brand-black hover:text-brand-neon text-brand-black font-bold uppercase py-6 px-12 text-2xl border-4 border-brand-black transition-all duration-300">
-          Записатися на курс
-        </a>
+      <div className="max-w-3xl mx-auto px-4 md:px-8 text-center">
+        {/* Section label */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-sm md:text-base uppercase tracking-[0.3em] text-[var(--muted)] mb-6"
+        >
+          Почніть зараз
+        </motion.p>
+
+        {/* Heading */}
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="text-3xl md:text-4xl lg:text-5xl font-[var(--font-h)] font-bold text-[var(--fg)] leading-[1.1] mb-6"
+        >
+          Готові побудувати свою{' '}
+          <span className="italic">систему</span>?
+        </motion.h2>
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-base md:text-lg text-[var(--muted,#888)] mb-14 max-w-xl mx-auto font-light leading-relaxed"
+        >
+          Отримайте доступ до платформи та почніть будівництво своєї маркетингової системи.
+        </motion.p>
+
+        {/* Form */}
+        <motion.form
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          onSubmit={handleSubmit}
+          className="max-w-md mx-auto space-y-5"
+          aria-label="Форма заявки на доступ"
+        >
+          <div>
+            <label htmlFor="cta-name" className="sr-only">
+              Ім&apos;я
+            </label>
+            <input
+              id="cta-name"
+              type="text"
+              placeholder="Ваше ім'я"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full bg-transparent border border-[var(--border-color)] text-[var(--fg)] px-5 py-4 text-sm md:text-base placeholder:text-[var(--muted)] placeholder:opacity-50 focus:outline-none focus:border-[var(--fg)] transition-colors duration-300 font-[var(--font-b)]"
+            />
+          </div>
+          <div>
+            <label htmlFor="cta-email" className="sr-only">
+              Email
+            </label>
+            <input
+              id="cta-email"
+              type="email"
+              placeholder="Ваш email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full bg-transparent border border-[var(--border-color)] text-[var(--fg)] px-5 py-4 text-sm md:text-base placeholder:text-[var(--muted)] placeholder:opacity-50 focus:outline-none focus:border-[var(--fg)] transition-colors duration-300 font-[var(--font-b)]"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={submitted}
+            className="w-full inline-flex items-center justify-center gap-3 px-8 py-4 md:py-5 bg-[var(--fg)] text-[var(--bg)] text-sm md:text-base font-semibold uppercase tracking-[0.15em] transition-all duration-300 hover:tracking-[0.25em] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {submitted ? (
+              <span>Дякуємо! Ми зв&apos;яжемося з вами.</span>
+            ) : (
+              <>
+                <span>Отримати доступ</span>
+                <ArrowRight size={16} />
+              </>
+            )}
+          </button>
+        </motion.form>
+
+        {/* Trust note */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="text-xs text-[var(--muted,#888)] opacity-50 mt-6"
+        >
+          Ми поважаємо вашу конфіденційність. Жодного спаму.
+        </motion.p>
       </div>
     </section>
   );

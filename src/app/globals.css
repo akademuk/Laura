@@ -19,104 +19,53 @@
 }
 
 /* 
-  Global CSS Variables for Theming
-  Format:
-  --bg: Background Color
-  --fg: Foreground/Text Color
-  --accent: Primary Brand Color (Buttons, Highlights)
-  --border-color: Color of structural borders
-  --border-width: Thickness of borders
+  Global CSS Variables — Black & White Theming
+  Two modes: dark (default) and light
 */
 
-/* 1. NEO-BRUTALISM (Default) */
-:root {
-  --bg: #FFFFFF;
-  --fg: #000000;
-  --accent: #D1F232;
-  --secondary: #FF00FF; /* Magenta pop */
-  
+/* DARK MODE (Default) — чорний фон, білий текст */
+:root,
+[data-theme='dark'] {
+  --bg: #0A0A0A;
+  --fg: #F5F5F0;
+  --accent: #FFFFFF;
+  --accent-light: #E0E0E0;
+  --secondary: #111111;
+  --muted: #777777;
+  --card-bg: #111111;
+  --card-border: #222222;
+
   --font-h: var(--font-unbounded);
   --font-b: var(--font-inter);
-  
-  --border-color: #000000;
-  /* Reduced border width based on user feedback about "Lords" (Borders) being messy */
-  --border-width: 1px; 
-  --radius: 0px;
-  --shadow: 4px 4px 0px 0px #000000;
-  
-  --mix-blend: difference;
-}
 
-/* 2. LUXURY (Dark, Gold, Serif) */
-[data-theme='luxury'] {
-  --bg: #0F0F0F;
-  --fg: #E5D0AC; /* Muted Gold */
-  --accent: #FFFFFF;
-  --secondary: #333333;
-
-  --font-h: var(--font-playfair);
-  --font-b: var(--font-montserrat);
-
-  --border-color: #333333;
+  --border-color: #222222;
   --border-width: 1px;
-  --radius: 0px;
+  --radius: 2px;
   --shadow: none;
-  
+
   --mix-blend: normal;
 }
 
-/* 3. MINIMAL (Clean, Grey, Sans) */
-[data-theme='minimal'] {
-  --bg: #F4F4F5;
-  --fg: #18181B;
-  --accent: #71717A; /* Zinc-500 */
-  --secondary: #E4E4E7;
+/* LIGHT MODE — білий фон, чорний текст */
+[data-theme='light'] {
+  --bg: #FFFFFF;
+  --fg: #0A0A0A;
+  --accent: #000000;
+  --accent-light: #333333;
+  --secondary: #F5F5F5;
+  --muted: #666666;
+  --card-bg: #F5F5F5;
+  --card-border: #E0E0E0;
 
-  --font-h: var(--font-inter);
+  --font-h: var(--font-unbounded);
   --font-b: var(--font-inter);
 
-  --border-color: transparent;
-  --border-width: 0px;
-  --radius: 8px; /* Soft corners */
-  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  
-  --mix-blend: normal;
-}
-
-/* 4. POP (Vibrant, Comic, Bold) */
-[data-theme='pop'] {
-  --bg: #FFFF00; /* Yellow */
-  --fg: #0000FF; /* Blue */
-  --accent: #FF0000; /* Red */
-  --secondary: #00FF00; /* Green */
-
-  --font-h: var(--font-comic);
-  --font-b: var(--font-comic);
-
-  --border-color: #000000;
-  --border-width: 4px;
-  --radius: 20px;
-  --shadow: 6px 6px 0px 0px #000000;
-  
-  --mix-blend: hard-light;
-}
-
-/* 5. RETRO (Terminal, Green, Monospace) */
-[data-theme='retro'] {
-  --bg: #0D1611; /* Dark Green/Black */
-  --fg: #4AF626; /* Terminal Green */
-  --accent: #4AF626;
-  --secondary: #1F3A26;
-
-  --font-h: var(--font-courier);
-  --font-b: var(--font-courier);
-
-  --border-color: #4AF626;
+  --border-color: #E0E0E0;
   --border-width: 1px;
-  --radius: 0px;
-  --shadow: 0 0 10px rgba(74, 246, 38, 0.5); /* Glowing effect */
-  
-  --mix-blend: screen;
+  --radius: 2px;
+  --shadow: none;
+
+  --mix-blend: normal;
 }
 
 /* Base Utility Classes Mapped to Promoted Variables */
@@ -125,7 +74,21 @@ body {
   background-color: var(--bg);
   color: var(--fg);
   font-family: var(--font-b);
+}
+
+body.theme-ready {
   transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s ease;
+}
+
+/* ─── Global Focus Visible ─── */
+*:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+
+/* Remove default outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -190,16 +153,79 @@ html.lenis, html.lenis body {
   pointer-events: none;
 }
 
-/* Global Grain/Noise Overlay */
+/* ─── Animated Film Grain ─── */
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0) }
+  10% { transform: translate(-2%, -5%) }
+  20% { transform: translate(-8%, 3%) }
+  30% { transform: translate(4%, -8%) }
+  40% { transform: translate(-3%, 7%) }
+  50% { transform: translate(-6%, 5%) }
+  60% { transform: translate(7%, -2%) }
+  70% { transform: translate(1%, 6%) }
+  80% { transform: translate(3%, -6%) }
+  90% { transform: translate(-5%, 4%) }
+}
+
 .noise-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: -50%;
+  left: -50%;
+  width: 300vw;
+  height: 300vh;
   pointer-events: none;
   z-index: 9999;
+  opacity: 0.06;
+  animation: grain 5s steps(8) infinite;
+  mix-blend-mode: normal;
+  will-change: transform;
+  overflow: hidden;
+}
+
+[data-theme='light'] .noise-overlay {
   opacity: 0.08;
-  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
+  mix-blend-mode: normal;
+}
+
+/* ─── Typewriter Cursor Blink ─── */
+@keyframes blink {
+  0%, 100% { opacity: 1 }
+  50% { opacity: 0 }
+}
+
+.animate-blink {
+  animation: blink 0.7s steps(1) infinite;
+}
+
+/* ─── Horizontal Line Reveal ─── */
+@keyframes line-reveal {
+  from { transform: scaleX(0) }
+  to { transform: scaleX(1) }
+}
+
+.line-reveal {
+  animation: line-reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: left;
+}
+
+/* ─── Stat Number Shimmer ─── */
+@keyframes shimmer {
+  0% { background-position: -200% center }
+  100% { background-position: 200% center }
+}
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--fg) 0%,
+    var(--muted) 40%,
+    var(--fg) 50%,
+    var(--muted) 60%,
+    var(--fg) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 6s linear infinite;
 }

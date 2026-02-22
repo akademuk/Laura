@@ -1,125 +1,104 @@
 'use client';
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useRef, useMemo } from 'react';
+import { useRef, useEffect } from 'react';
 import * as THREE from 'three';
-import { useTheme } from './ThemeProvider'; // Assume this export exists or I'll create it if needed
-import { MeshDistortMaterial, Stars, Text, Float } from '@react-three/drei';
+import { useTheme } from './ThemeProvider';
 
-function NeoBackground() {
-    return (
-        <>
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} intensity={1} />
-            <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-                <mesh position={[2, 0, 0]} scale={1.5}>
-                    <icosahedronGeometry args={[1, 0]} />
-                    <MeshDistortMaterial
-                        color="#ccff00" // Neon Lime
-                        speed={3}
-                        distort={0.4}
-                        radius={1}
-                        wireframe
-                    />
-                </mesh>
-            </Float>
-             <Float speed={3} rotationIntensity={1.5} floatIntensity={1}>
-                <mesh position={[-2, -1, -2]} scale={1}>
-                    <torusKnotGeometry args={[0.8, 0.2, 100, 16]} />
-                    <MeshDistortMaterial
-                        color="#ff00ff" // Neon Magenta
-                        speed={5}
-                        distort={0.3}
-                         wireframe
-                    />
-                </mesh>
-            </Float>
-             <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-        </>
-    );
+/**
+ * Interactive architectural grid that deforms based on mouse position.
+ * Creates a "wave" effect emanating from the cursor — tech-premium feel.
+ */
+function InteractiveGrid({ color, opacity }: { color: string; opacity: number }) {
+  const meshRef = useRef<THREE.Mesh>(null!);
+  const mouse = useRef([0, 0]);
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      mouse.current[0] = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.current[1] = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
+
+  useFrame(({ clock }) => {
+    const mesh = meshRef.current;
+    if (!mesh) return;
+    const pos = mesh.geometry.attributes.position;
+    const t = clock.getElapsedTime();
+
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const y = pos.getY(i);
+
+      // Distance from mouse-mapped position
+      const dx = x / 12 - mouse.current[0];
+      const dy = y / 12 - mouse.current[1];
+      const d = Math.sqrt(dx * dx + dy * dy);
+
+      // Wave emanating from cursor
+      const wave = Math.sin(d * 3 - t * 2) * 0.35 * Math.exp(-d * 0.5);
+      // Ambient slow undulation
+      const ambient =
+        Math.sin(x * 0.2 + t * 0.4) * Math.cos(y * 0.2 + t * 0.3) * 0.08;
+
+      pos.setZ(i, wave + ambient);
+    }
+    pos.needsUpdate = true;
+  });
+
+  return (
+    <mesh ref={meshRef} rotation={[-Math.PI / 2.5, 0, 0]} position={[0, -2, 0]}>
+      <planeGeometry args={[28, 28, 56, 56]} />
+      <meshBasicMaterial color={color} wireframe transparent opacity={opacity} />
+    </mesh>
+  );
 }
 
-function LuxuryBackground() {
-    return (
-        <>
-             <ambientLight intensity={0.2} />
-             <pointLight position={[10, 10, 10]} intensity={1.5} color="#ffd700" />
-             <Float speed={1} rotationIntensity={0.2} floatIntensity={0.2}>
-                <mesh position={[0, 0, 0]}>
-                    <sphereGeometry args={[2, 64, 64]} />
-                    <meshStandardMaterial
-                        color="#111"
-                        roughness={0.1}
-                        metalness={0.8}
-                        emissive="#333"
-                        emissiveIntensity={0.2}
-                    />
-                </mesh>
-             </Float>
-             <Stars radius={100} depth={50} count={1000} factor={4} saturation={0} fade speed={0.5} />
-        </>
-    )
+/** Floating accent points — architectural "nodes" */
+function GridNodes() {
+  const groupRef = useRef<THREE.Group>(null!);
+
+  useFrame(({ clock }) => {
+    if (!groupRef.current) return;
+    groupRef.current.rotation.y = clock.getElapsedTime() * 0.05;
+  });
+
+  const positions: [number, number, number][] = [
+    [-3, 1, -2],
+    [4, 0.5, -3],
+    [-1, 2, -4],
+    [2, 1.5, -1],
+    [-4, 0, -5],
+  ];
+
+  return (
+    <group ref={groupRef}>
+      {positions.map((pos, i) => (
+        <mesh key={i} position={pos}>
+          <sphereGeometry args={[0.03, 8, 8]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.3} />
+        </mesh>
+      ))}
+    </group>
+  );
 }
-
-function MinimalBackground() {
-     return (
-        <>
-             <ambientLight intensity={0.8} />
-             <mesh position={[0, 0, -5]} rotation={[-Math.PI / 4, 0, 0]}>
-                 <planeGeometry args={[20, 20, 32, 32]} />
-                 <meshBasicMaterial color="#f0f0f0" wireframe />
-             </mesh>
-        </>
-     )
-}
-
-function PopBackground() {
-      return (
-        <>
-            <ambientLight intensity={0.8} />
-             <directionalLight position={[5, 10, 7]} intensity={1} />
-             <Float speed={5} rotationIntensity={2} floatIntensity={2}>
-                 <mesh position={[0, 0, 0]}>
-                     <boxGeometry args={[2, 2, 2]} />
-                     <meshNormalMaterial />
-                 </mesh>
-             </Float>
-        </>
-      )
-}
-
-
-function RetroBackground() {
-      // Simple grid moving logic could go here, for now a static grid
-       return (
-        <>
-             <ambientLight intensity={0.5} />
-             <gridHelper args={[50, 50, 0xff0000, 0x0000ff]} position={[0, -2, 0]} />
-             <Stars radius={100} depth={50} count={5000} factor={4} saturation={1} fade speed={2} />
-        </>
-      )
-}
-
 
 export default function HeroBackground3D() {
-    const { theme } = useTheme();
+  const { theme } = useTheme();
+  const isDark = theme !== 'light';
 
-    const renderScene = () => {
-        switch (theme) {
-            case 'luxury': return <LuxuryBackground />;
-            case 'minimal': return <MinimalBackground />;
-            case 'pop': return <PopBackground />;
-            case 'retro': return <RetroBackground />;
-            case 'neo':
-            default: return <NeoBackground />;
-        }
-    }
-
-    return (
-        <div className="absolute inset-0 -z-10 h-full w-full bg-black">
-            <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-                {renderScene()}
-            </Canvas>
-        </div>
-    );
+  return (
+    <div className="absolute inset-0 -z-10 h-full w-full">
+      <Canvas camera={{ position: [0, 4, 10], fov: 50 }}>
+        <ambientLight intensity={isDark ? 0.1 : 0.6} />
+        <InteractiveGrid
+          color={isDark ? '#ffffff' : '#0a0a0a'}
+          opacity={isDark ? 0.06 : 0.04}
+        />
+        {isDark && <GridNodes />}
+      </Canvas>
+    </div>
+  );
 }
