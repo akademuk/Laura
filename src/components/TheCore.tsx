@@ -2,12 +2,26 @@
 
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Zap, GraduationCap, Target, TrendingUp } from 'lucide-react';
+/* ─── Premium thin-line SVG icons ─── */
+const iconBase = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+
+const PremiumZap = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...iconBase} {...p}><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z" /></svg>
+);
+const PremiumGrad = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...iconBase} {...p}><path d="M22 10v6M2 10l10-5 10 5-10 5Z" /><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5" /></svg>
+);
+const PremiumTarget = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...iconBase} {...p}><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>
+);
+const PremiumTrend = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...iconBase} {...p}><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" /></svg>
+);
 
 const highlights = [
-  { icon: GraduationCap, value: '85', label: 'навчальних матеріалів' },
-  { icon: TrendingUp, value: '4', label: 'місяці інтенсиву' },
-  { icon: Target, value: '5', label: 'років університету — замінено' },
+  { icon: PremiumGrad, value: '85', label: 'навчальних матеріалів' },
+  { icon: PremiumTrend, value: '4', label: 'місяці інтенсиву' },
+  { icon: PremiumTarget, value: '5', label: 'років університету — замінено' },
 ];
 
 export default function TheCore() {
@@ -36,7 +50,7 @@ export default function TheCore() {
           transition={{ duration: 0.6 }}
           className="flex items-center gap-4 mb-8"
         >
-          <Zap size={16} className="text-[var(--muted)]" />
+          <PremiumZap className="text-[var(--muted)]" />
           <span className="text-xs md:text-sm uppercase tracking-[0.5em] text-[var(--muted)] font-medium">
             The Core
           </span>
@@ -74,8 +88,7 @@ export default function TheCore() {
                     className="bg-[var(--bg)] px-4 py-5 md:px-6 md:py-6 text-center"
                   >
                     <Icon
-                      size={18}
-                      className="mx-auto text-[var(--muted)] mb-3 opacity-40"
+                      className="mx-auto text-[var(--muted)] mb-3 opacity-30"
                     />
                     <p className="text-2xl md:text-3xl font-[var(--font-h)] font-bold text-[var(--fg)]">
                       {item.value}

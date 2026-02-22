@@ -133,6 +133,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Lenis Scroll Defaults */
+html {
+  scroll-behavior: smooth;
+}
+
 html.lenis, html.lenis body {
   height: auto;
 }
@@ -153,37 +157,20 @@ html.lenis, html.lenis body {
   pointer-events: none;
 }
 
-/* ─── Animated Film Grain ─── */
-@keyframes grain {
-  0%, 100% { transform: translate(0, 0) }
-  10% { transform: translate(-2%, -5%) }
-  20% { transform: translate(-8%, 3%) }
-  30% { transform: translate(4%, -8%) }
-  40% { transform: translate(-3%, 7%) }
-  50% { transform: translate(-6%, 5%) }
-  60% { transform: translate(7%, -2%) }
-  70% { transform: translate(1%, 6%) }
-  80% { transform: translate(3%, -6%) }
-  90% { transform: translate(-5%, 4%) }
-}
-
+/* ─── Static Film Grain ─── */
 .noise-overlay {
   position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 300vw;
-  height: 300vh;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.06;
-  animation: grain 5s steps(8) infinite;
+  opacity: 0.04;
   mix-blend-mode: normal;
-  will-change: transform;
-  overflow: hidden;
 }
 
 [data-theme='light'] .noise-overlay {
-  opacity: 0.08;
+  opacity: 0.06;
   mix-blend-mode: normal;
 }
 

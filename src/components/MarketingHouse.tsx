@@ -2,22 +2,41 @@
 
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { useState, useRef } from 'react';
-import {
-  ChevronDown,
-  Target,
-  Search,
-  BarChart3,
-  Users,
-  Server,
-  Cpu,
-  Globe,
-  BookOpen,
-} from 'lucide-react';
+/* ─── Premium thin-line SVG icons ─── */
+const ib = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+
+const IcoChevron = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...ib} {...p}><polyline points="6 9 12 15 18 9" /></svg>
+);
+const IcoTarget = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...ib} {...p}><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>
+);
+const IcoSearch = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...ib} {...p}><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+);
+const IcoChart = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...ib} {...p}><path d="M3 3v18h18" /><path d="M7 16l4-8 4 4 4-8" /></svg>
+);
+const IcoUsers = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...ib} {...p}><circle cx="9" cy="7" r="4" /><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" /><circle cx="19" cy="7" r="3" /><path d="M21 21v-1.5a3 3 0 0 0-2-2.83" /></svg>
+);
+const IcoServer = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...ib} {...p}><rect x="2" y="2" width="20" height="8" rx="2" /><rect x="2" y="14" width="20" height="8" rx="2" /><line x1="6" y1="6" x2="6.01" y2="6" /><line x1="6" y1="18" x2="6.01" y2="18" /></svg>
+);
+const IcoCpu = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...ib} {...p}><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" /><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3" /></svg>
+);
+const IcoGlobe = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...ib} {...p}><circle cx="12" cy="12" r="10" /><ellipse cx="12" cy="12" rx="4" ry="10" /><path d="M2 12h20" /></svg>
+);
+const IcoBook = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...ib} {...p}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15Z" /><line x1="9" y1="7" x2="15" y2="7" /><line x1="9" y1="11" x2="13" y2="11" /></svg>
+);
 
 /* ─── Data ─── */
 
 interface HouseItem {
-  icon: typeof Target;
+  icon: (p: React.SVGProps<SVGSVGElement>) => React.JSX.Element;
   title: string;
   description: string;
 }
@@ -38,25 +57,25 @@ const sections: HouseSection[] = [
     color: 'var(--fg)',
     items: [
       {
-        icon: Target,
+        icon: IcoTarget,
         title: 'SOSTACK Model',
         description:
           'Глибоке проектування стратегії (Situation, Objectives, Strategy, Tactics, Action, Control).',
       },
       {
-        icon: Search,
+        icon: IcoSearch,
         title: 'Пошук точки G',
         description:
           'Знаходження критичного вузла системи, де мінімальне зусилля створює максимальний прибуток та кратне масштабування.',
       },
       {
-        icon: BarChart3,
+        icon: IcoChart,
         title: 'Економіка',
         description:
           'Unit-економіка (LTV, CAC, ROMI), сегментація ЦА через тригери та психографію.',
       },
       {
-        icon: Users,
+        icon: IcoUsers,
         title: 'Команда та Ресурс',
         description:
           'Груповий та індивідуальний найм, система онбордингу 2.0. Аналіз ефективності оргструктури: людський, часовий та моральний ресурс. Розробка посадових інструкцій (KPI/OKR), що виключають дублювання функцій.',
@@ -70,25 +89,25 @@ const sections: HouseSection[] = [
     color: 'var(--fg)',
     items: [
       {
-        icon: Server,
+        icon: IcoServer,
         title: 'Infrastructure',
         description:
           'Налаштування CRM-архітектури, де не втрачається жоден лід.',
       },
       {
-        icon: Cpu,
+        icon: IcoCpu,
         title: 'Tech Stack',
         description:
           'Складна інтеграція через API та Webhooks, створення мультилендингів та висококонверсійних сайтів.',
       },
       {
-        icon: Globe,
+        icon: IcoGlobe,
         title: 'Ecosystem',
         description:
           "Об'єднання соцмереж, реклами та контент-маркетингу в єдину мережу.",
       },
       {
-        icon: BookOpen,
+        icon: IcoBook,
         title: 'Base of Knowledge',
         description:
           'Створення регламентів та бази знань, що робить бізнес незалежним від персоналій.',
@@ -123,7 +142,7 @@ function HouseLevel({
       {/* Header (clickable) */}
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between px-6 md:px-10 py-6 md:py-8 text-left hover:bg-[var(--card-bg)] transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--fg)]"
+        className="w-full flex items-center justify-between px-6 md:px-10 py-6 md:py-8 text-left cursor-pointer hover:bg-[var(--card-bg)] transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--fg)]"
         aria-expanded={isOpen}
       >
         <div className="flex items-center gap-4 md:gap-6 min-w-0">
@@ -139,8 +158,9 @@ function HouseLevel({
           transition={{ duration: 0.3 }}
           className="flex-shrink-0 ml-4"
         >
-          <ChevronDown
-            size={20}
+          <IcoChevron
+            width={20}
+            height={20}
             className="text-[var(--muted)] group-hover:text-[var(--fg)] transition-colors"
           />
         </motion.div>
@@ -169,11 +189,9 @@ function HouseLevel({
                       className="group/card p-5 md:p-6 border border-[var(--border-color)] bg-[var(--card-bg)] backdrop-blur-sm hover:border-[var(--fg)] transition-colors duration-300"
                     >
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 border border-[var(--border-color)] flex items-center justify-center flex-shrink-0 group-hover/card:border-[var(--fg)] transition-colors duration-300">
+                        <div className="w-11 h-11 border border-[var(--fg)]/[0.08] flex items-center justify-center flex-shrink-0 group-hover/card:border-[var(--fg)]/[0.25] transition-all duration-500">
                           <Icon
-                            size={18}
-                            strokeWidth={1.5}
-                            className="text-[var(--muted)] group-hover/card:text-[var(--fg)] transition-colors duration-300"
+                            className="text-[var(--muted)] group-hover/card:text-[var(--fg)] transition-colors duration-500"
                           />
                         </div>
                         <div className="min-w-0">

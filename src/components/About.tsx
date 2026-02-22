@@ -1,49 +1,62 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import {
-  Briefcase,
-  RefreshCw,
-  Users,
-  BookOpen,
-  Handshake,
-  Layers,
-} from 'lucide-react';
+/* ─── Premium thin-line SVG icons ─── */
+const iconProps = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+
+const PremiumBriefcase = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...iconProps} {...p}><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" /><line x1="12" y1="12" x2="12" y2="12.01" /></svg>
+);
+const PremiumRefresh = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...iconProps} {...p}><path d="M21 2v6h-6" /><path d="M3 12a9 9 0 0 1 15-6.7L21 8" /><path d="M3 22v-6h6" /><path d="M21 12a9 9 0 0 1-15 6.7L3 16" /></svg>
+);
+const PremiumUsers = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...iconProps} {...p}><circle cx="9" cy="7" r="4" /><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" /><circle cx="19" cy="7" r="3" /><path d="M21 21v-1.5a3 3 0 0 0-2-2.83" /></svg>
+);
+const PremiumBook = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...iconProps} {...p}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15Z" /><line x1="9" y1="7" x2="15" y2="7" /><line x1="9" y1="11" x2="13" y2="11" /></svg>
+);
+const PremiumHandshake = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...iconProps} {...p}><path d="m11 17 2 2a1 1 0 0 0 1.41 0l3.3-3.29a1 1 0 0 0 0-1.42L14 11" /><path d="m3 7 3-3 5.5 5.5" /><path d="m21 7-3-3-5.5 5.5" /><path d="m8 13-3 3" /><path d="m14 7-1.5 1.5" /></svg>
+);
+const PremiumLayers = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg {...iconProps} {...p}><path d="m12 2 10 6.5v7L12 22 2 15.5v-7L12 2Z" /><path d="M12 22V15.5" /><path d="m22 8.5-10 7-10-7" /><path d="m2 15.5 10-7 10 7" /></svg>
+);
 
 /* ─── Card Data ─── */
 const cards = [
   {
-    icon: Briefcase,
+    icon: PremiumBriefcase,
     label: 'Досвід',
     title: '5 років у маркетингу',
     text: 'Від створення власного бізнесу до позиції CMO з управлінням стратегічними партнерствами у Boss Auto.',
   },
   {
-    icon: RefreshCw,
+    icon: PremiumRefresh,
     label: 'Операційна трансформація',
     title: 'Перезапуск процесів',
     text: 'Реструктуризація оргструктур та впровадження data-driven підходу в операційне управління.',
   },
   {
-    icon: Users,
+    icon: PremiumUsers,
     label: 'Рекрутинг-масштаб',
     title: '500+ кандидатів',
     text: 'Масштабування команд через систематичний рекрутинг та побудову HR-процесів.',
   },
   {
-    icon: BookOpen,
+    icon: PremiumBook,
     label: 'Методологія',
     title: 'Системний підхід',
     text: 'Книга продажів на 86 сторінок, 12-крокові воронки та чіткі регламенти роботи.',
   },
   {
-    icon: Handshake,
+    icon: PremiumHandshake,
     label: 'Партнерства',
     title: 'Стратегічні альянси',
     text: 'OKKO, Fishka, Bank Alliance, ФК «Рух» — досвід роботи з великими брендами.',
   },
   {
-    icon: Layers,
+    icon: PremiumLayers,
     label: 'Діапазон',
     title: 'Від техніки до стратегії',
     text: 'Webhooks, API-інтеграції → стратегічне планування та управління бюджетами.',
@@ -79,8 +92,8 @@ function GlassCard({
       className={`group relative p-6 md:p-7 rounded-2xl border border-[var(--fg)]/[0.06] bg-[var(--fg)]/[0.02] backdrop-blur-sm hover:border-[var(--fg)]/[0.12] hover:bg-[var(--fg)]/[0.04] transition-all duration-500 ${className}`}
     >
       {/* Icon */}
-      <div className="w-10 h-10 rounded-xl bg-[var(--fg)]/[0.05] flex items-center justify-center mb-4 group-hover:bg-[var(--fg)]/[0.08] transition-colors">
-        <Icon size={18} className="text-[var(--fg)] opacity-50 group-hover:opacity-80 transition-opacity" />
+      <div className="w-12 h-12 rounded-xl border border-[var(--fg)]/[0.08] flex items-center justify-center mb-5 group-hover:border-[var(--fg)]/[0.2] transition-all duration-500">
+        <Icon className="text-[var(--fg)] opacity-40 group-hover:opacity-75 transition-opacity duration-500" />
       </div>
 
       {/* Label */}

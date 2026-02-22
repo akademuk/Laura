@@ -6,6 +6,7 @@ type Theme = 'dark' | 'light';
 
 interface ThemeContextType {
   theme: Theme;
+  mounted: boolean;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
 }
@@ -13,25 +14,26 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('laura-theme') as Theme | null;
-      return saved === 'light' ? 'light' : 'dark';
+  const [theme, setTheme] = useState<Theme>('dark');
+  const [mounted, setMounted] = useState(false);
+
+  // Hydrate theme from localStorage after mount
+  useEffect(() => {
+    const saved = localStorage.getItem('laura-theme') as Theme | null;
+    if (saved === 'light') {
+      setTheme('light');
+      document.documentElement.setAttribute('data-theme', 'light');
     }
-    return 'dark';
-  });
-  const [ready, setReady] = useState(false);
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     // Enable transitions only after first theme is applied
-    if (!ready) {
-      requestAnimationFrame(() => {
-        document.body.classList.add('theme-ready');
-        setReady(true);
-      });
+    if (mounted) {
+      document.body.classList.add('theme-ready');
     }
-  }, [theme, ready]);
+  }, [theme, mounted]);
 
   const handleSetTheme = (t: Theme) => {
     setTheme(t);
@@ -43,7 +45,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme: handleSetTheme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, mounted, setTheme: handleSetTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

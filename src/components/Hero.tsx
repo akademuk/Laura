@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowDown } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
@@ -71,7 +70,7 @@ export default function Hero() {
       />
 
       {/* ── Content ── */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-8 pt-32 pb-20 md:pt-40 md:pb-32">
+      <div className="relative z-10 max-w-[90rem] w-full mx-auto px-6 md:px-12 lg:px-20 pt-32 pb-20 md:pt-40 md:pb-32">
         {/* Tagline */}
         <motion.p
           initial={{ opacity: 0, y: 14 }}
@@ -84,50 +83,38 @@ export default function Hero() {
         </motion.p>
 
         {/* ── H1 with typewriter ── */}
-        <div className="relative mb-8 md:mb-10">
-          {/* Invisible spacer reserves full height */}
-          <h1
-            aria-hidden="true"
-            className="invisible text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] xl:text-[5.5rem] font-[var(--font-h)] font-bold leading-[1.05] tracking-tight select-none"
-          >
-            {SOLID_PART}
-            <span>{OUTLINE_PART}</span>
-          </h1>
-
-          {/* Visible typed text */}
-          <h1
-            className="absolute inset-0 text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] xl:text-[5.5rem] font-[var(--font-h)] font-bold text-[var(--fg)] leading-[1.05] tracking-tight"
-            aria-live="polite"
-          >
-            {displayed.length <= SOLID_PART.length ? (
-              displayed
-            ) : (
-              <>
-                {SOLID_PART}
-                <span
-                  className="text-transparent"
-                  style={{
-                    WebkitTextStroke: '1.5px var(--fg)',
-                  }}
-                >
-                  {displayed.slice(SOLID_PART.length)}
-                </span>
-              </>
-            )}
-            {started && !done && (
-              <span className="animate-blink text-[var(--accent)] ml-0.5 font-light">
-                ▎
+        <h1
+          className="mb-8 md:mb-12 font-[var(--font-h)] font-bold text-[var(--fg)] leading-[1.05] tracking-tight min-h-[1.1em]" style={{ fontSize: 'clamp(1.75rem, 5.5vw, 7rem)' }}
+          aria-live="polite"
+        >
+          {displayed.length <= SOLID_PART.length ? (
+            displayed
+          ) : (
+            <>
+              {SOLID_PART}
+              <span
+                className="text-transparent"
+                style={{
+                  WebkitTextStroke: '1.5px var(--fg)',
+                }}
+              >
+                {displayed.slice(SOLID_PART.length)}
               </span>
-            )}
-          </h1>
-        </div>
+            </>
+          )}
+          {started && !done && (
+            <span className="animate-blink text-[var(--accent)] ml-0.5 font-light">
+              ▎
+            </span>
+          )}
+        </h1>
 
         {/* Subtitle */}
         <motion.p
           initial={false}
           animate={{ opacity: showAfter ? 1 : 0, y: showAfter ? 0 : 16 }}
           transition={{ duration: 0.8 }}
-          className="text-base md:text-lg lg:text-xl text-[var(--muted)] leading-relaxed max-w-2xl mb-12 md:mb-16 font-light"
+          className="text-base md:text-xl lg:text-2xl xl:text-[1.65rem] text-[var(--muted)] leading-relaxed max-w-3xl mb-12 md:mb-16 font-light"
         >
           Проєктуємо маркетинг, що масштабується. Від хаотичних гіпотез — до
           системної архітектури бізнесу від практика з 5-річним досвідом.
@@ -171,7 +158,9 @@ export default function Hero() {
           animate={{ y: [0, 6, 0] }}
           transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
         >
-          <ArrowDown size={14} className="text-[var(--fg)] opacity-40" />
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--fg)] opacity-40">
+            <line x1="12" y1="5" x2="12" y2="19" /><polyline points="19 12 12 19 5 12" />
+          </svg>
         </motion.div>
       </motion.div>
 
