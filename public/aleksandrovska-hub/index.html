@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aleksandrovska Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700;800;900&family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{unbounded:["Unbounded","sans-serif"],inter:["Inter Tight","sans-serif"]}}}}</script>
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:auto}
+    body{background:#0A0A0A;color:#fff;font-family:"Inter Tight",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    /* Nav */
+    .nav{transition:background .4s,backdrop-filter .4s,border-color .4s;border-bottom:1px solid transparent}
+    .nav.scrolled{background:rgba(10,10,10,.92);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom-color:rgba(255,255,255,.06)}
+    /* Mobile menu */
+    .mnav{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1)}
+    .mnav.open{max-height:320px}
+    /* Section label */
+    .slabel{display:flex;align-items:center;gap:12px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5em;color:rgba(255,255,255,.28)}
+    .sdot{width:8px;height:8px;background:rgba(255,255,255,.22);transform:rotate(45deg);flex-shrink:0}
+    .sline{flex:1;height:1px;background:rgba(255,255,255,.06)}
+    .sdivider{height:1px;background:linear-gradient(to right,transparent,rgba(255,255,255,.08),transparent)}
+    /* CTA button */
+    .btnw{display:inline-flex;align-items:center;gap:10px;background:#fff;color:#0A0A0A;padding:20px 46px;font-family:"Inter Tight",sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.18em;border:none;cursor:pointer;text-decoration:none;transition:background .3s,box-shadow .35s,letter-spacing .3s,transform .25s}
+    .btnw:hover{background:#f0f0f0;box-shadow:0 0 44px rgba(255,255,255,.2);letter-spacing:.26em;transform:translateY(-2px)}
+    /* Stat numbers */
+    .snum{font-family:"Unbounded",sans-serif;font-weight:900;line-height:1;background:linear-gradient(160deg,#fff 0%,rgba(255,255,255,.5) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    /* Glass card */
+    .glass{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:16px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:border-color .3s,background .3s,transform .3s}
+    .glass:hover{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.045);transform:translateY(-3px)}
+    /* Photo placeholder */
+    .photoph{background:linear-gradient(135deg,#0f0f0f 0%,#171717 50%,#0f0f0f 100%);position:relative;overflow:hidden;border-radius:16px}
+    .photoph::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.03) 50%,transparent 65%);animation:shimmer 4s ease infinite}
+    @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+    /* Tag */
+    .stag{display:inline-block;padding:5px 12px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.14em;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35)}
+    /* Accordion */
+    .accc{max-height:0;overflow:hidden;opacity:0;transition:max-height .5s cubic-bezier(.16,1,.3,1),opacity .35s ease}
+    .accc.open{max-height:1400px;opacity:1}
+    .accicon{transition:transform .35s cubic-bezier(.16,1,.3,1);flex-shrink:0}
+    .accitem.open .accicon{transform:rotate(180deg)}
+    .accbtn{width:100%;display:flex;align-items:center;gap:20px;padding:28px 40px;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.015);transition:background .25s}
+    .accbtn:hover{background:rgba(255,255,255,.032)}
+    @media(max-width:768px){.accbtn{padding:22px 20px}}
+    /* Module card */
+    .mcard{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:22px 24px;transition:border-color .25s,background .25s}
+    .mcard:hover{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+    /* Form */
+    .hubinp{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:16px 20px;color:#fff;font-family:"Inter Tight",sans-serif;font-size:14px;outline:none;transition:border-color .25s,background .25s}
+    .hubinp:focus{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.06)}
+    .hubinp::placeholder{color:rgba(255,255,255,.22)}
+    /* Reveal */
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .75s ease,transform .75s ease}
+    .reveal.vis{opacity:1;transform:none}
+    .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+    /* SVG house hover */
+    .hpart{transition:opacity .22s,filter .22s;cursor:pointer}
+    .hpart:hover{opacity:1 !important;filter:drop-shadow(0 0 16px rgba(255,255,255,.32))}
+    /* Responsive */
+    @media(max-width:900px){#bento{grid-template-columns:1fr !important}#bento>*{grid-column:span 1 !important;grid-row:span 1 !important}}
+    @media(max-width:640px){#stats{grid-template-columns:1fr !important;border:none !important}#stats>*{border:1px solid rgba(255,255,255,.08) !important;margin-bottom:8px}}
+    @media(max-width:768px){#core,#architect,#house{padding-top:80px !important;padding-bottom:80px !important}.accc [style*="repeat(2,1fr)"]{grid-template-columns:1fr !important}}
+    .wm{pointer-events:none;user-select:none}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav" class="nav fixed top-0 left-0 right-0 z-50">
+  <div style="max-width:80rem;margin:0 auto;padding:0 40px;">
+    <div style="height:72px;display:flex;align-items:center;justify-content:space-between;">
+      <a href="#" style="font-family:Unbounded,sans-serif;font-weight:900;font-size:1.15rem;color:#fff;text-decoration:none;letter-spacing:-.01em;">Aleksandrovska<span style="color:rgba(255,255,255,.14)">.</span></a>
+      <ul class="hidden md:flex" style="list-style:none;align-items:center;gap:32px;">
+        <li><a href="#core"      class="navlink" style="font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:rgba(255,255,255,.38);text-decoration:none;transition:color .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Програма</a></li>
+        <li><a href="#architect" class="navlink" style="font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:rgba(255,255,255,.38);text-decoration:none;transition:color .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Архітектор</a></li>
+        <li><a href="#house"     class="navlink" style="font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:rgba(255,255,255,.38);text-decoration:none;transition:color .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Будинок</a></li>
+      </ul>
+      <button id="burger" class="md:hidden" style="background:none;border:none;cursor:pointer;color:#fff;padding:4px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      </button>
+    </div>
+    <div id="mnav" class="mnav md:hidden" style="border-top:1px solid rgba(255,255,255,.05)">
+      <ul style="list-style:none;padding:24px 0;display:flex;flex-direction:column;align-items:center;gap:20px">
+        <li><a href="#core"      onclick="closeMenu()" style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:1.1rem;text-decoration:none">Програма</a></li>
+        <li><a href="#architect" onclick="closeMenu()" style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:1.1rem;text-decoration:none">Архітектор</a></li>
+        <li><a href="#house"     onclick="closeMenu()" style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:1.1rem;text-decoration:none">Будинок</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ===========================
+     БЛОК 1: HERO
+=========================== -->
+<section style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;background:#0A0A0A;">
+
+  <!-- Інтерактивна архітектурна сітка — реагує на курсор -->
+  <canvas id="grid" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block;"></canvas>
+
+  <!-- Radial glow -->
+  <div style="position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(255,255,255,.016) 0%,transparent 65%);pointer-events:none;z-index:0;"></div>
+
+  <div style="position:relative;z-index:2;max-width:80rem;width:100%;margin:0 auto;padding:140px 40px 120px;">
+
+    <!-- H1: Unbounded, слово в слово -->
+    <h1 class="reveal d1" style="font-family:Unbounded,sans-serif;font-weight:900;line-height:.92;letter-spacing:-.025em;margin-bottom:36px;font-size:8rem;">
+      Aleksandrovska<br>
+      <span style="-webkit-text-stroke:2px rgba(255,255,255,.72);color:transparent;">Hub</span>
+    </h1>
+
+    <!-- Підзаголовок: Inter Tight, слово в слово -->
+    <p class="reveal d2" style="font-family:'Inter Tight',sans-serif;font-weight:300;font-size:clamp(1rem,2.1vw,1.4rem);line-height:1.75;color:#A0A0A0;max-width:740px;margin-bottom:52px;">
+      Проєктуємо маркетинг, що масштабується. Від хаотичних гіпотез&nbsp;&mdash; до системної архітектури бізнесу від практика з 5-річним досвідом.
+    </p>
+
+    <!-- CTA -->
+    <div class="reveal d3">
+      <a href="#core" class="btnw">Розпочати будівництво</a>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:0;left:0;right:0;height:160px;background:linear-gradient(to top,#0A0A0A,transparent);z-index:1;pointer-events:none;"></div>
+</section>
+
+<div class="sdivider"></div>
+
+<!-- ===========================
+     БЛОК 2: ПРО КУРС (THE CORE)
+=========================== -->
+<section id="core" style="position:relative;background:#0A0A0A;padding:130px 0;">
+  <div style="max-width:80rem;margin:0 auto;padding:0 40px;">
+
+    <div class="slabel reveal" style="margin-bottom:36px;">
+      <div class="sdot"></div><span>Про Курс</span><div class="sline"></div>
+    </div>
+
+    <!-- Цифри 85, 4, 5 — акцентні -->
+    <div id="stats" class="reveal d1" style="display:grid;grid-template-columns:repeat(3,1fr);border:1px solid rgba(255,255,255,.08);margin-bottom:80px;">
+      <div style="padding:52px 24px;text-align:center;border-right:1px solid rgba(255,255,255,.08);">
+        <div class="snum" style="font-size:clamp(3.5rem,8vw,7.5rem);margin-bottom:10px;">85</div>
+        <p style="font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.28);line-height:1.6;">Навчальних<br/>матеріалів</p>
+      </div>
+      <div style="padding:52px 24px;text-align:center;border-right:1px solid rgba(255,255,255,.08);">
+        <div class="snum" style="font-size:clamp(3.5rem,8vw,7.5rem);margin-bottom:10px;">4</div>
+        <p style="font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.28);line-height:1.6;">Місяці<br/>інтенсиву</p>
+      </div>
+      <div style="padding:52px 24px;text-align:center;">
+        <div class="snum" style="font-size:clamp(3.5rem,8vw,7.5rem);margin-bottom:10px;">5</div>
+        <p style="font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.28);line-height:1.6;">Років<br/>університету</p>
+      </div>
+    </div>
+
+    <!-- Текст СЛОВО В СЛОВО -->
+    <div class="reveal d2" style="max-width:900px;">
+      <p style="font-family:'Inter Tight',sans-serif;font-size:clamp(1.05rem,2vw,1.42rem);line-height:1.9;color:rgba(255,255,255,.58);">
+        <span style="font-family:Unbounded,sans-serif;font-weight:800;color:#fff;font-size:clamp(1.1rem,2.2vw,1.5rem);">85 навчальних матеріалів. 4 місяці інтенсиву, що замінюють 5 років університету.</span>&nbsp;Ви не просто вивчаєте інструменти&nbsp;&mdash; ви опановуєте роль <strong style="color:#fff;font-weight:600;">Marketing Director.</strong> Це синтез стратегічного мислення, операційного контролю та лідерства, що трансформує хаос у прибуток.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<div class="sdivider"></div>
+
+<!-- ===========================
+     БЛОК 3: АРХІТЕКТОР СИСТЕМИ
+=========================== -->
+<section id="architect" style="position:relative;background:#060606;padding:130px 0;overflow:hidden;">
+  <div style="max-width:80rem;margin:0 auto;padding:0 40px;">
+
+    <div class="reveal" style="margin-bottom:60px;">
+      <div class="slabel" style="margin-bottom:18px;"><div class="sdot"></div><span>Архітектор Системи</span></div>
+      <h2 style="font-family:Unbounded,sans-serif;font-weight:900;color:#fff;font-size:clamp(2rem,5.5vw,5.5rem);line-height:1.05;">
+        Лаура <em style="font-weight:300;font-style:normal;color:rgba(255,255,255,.18)">Александровська</em>
+      </h2>
+    </div>
+
+    <!-- BENTO GRID -->
+    <div id="bento" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+
+      <!-- Фото — 2 рядки -->
+      <div class="glass photoph reveal" style="grid-row:span 2;min-height:440px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;position:relative;">
+        <img src="..." alt="Laura" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:16px;display:none;"/>
+        <div style="width:110px;height:110px;border-radius:50%;border:1.5px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;margin-bottom:20px;position:relative;z-index:1;">
+          <span style="font-family:Unbounded,sans-serif;font-weight:900;font-size:3.5rem;color:rgba(255,255,255,.07);">Л</span>
+        </div>
+        <p style="font-size:10px;text-transform:uppercase;letter-spacing:.3em;color:rgba(255,255,255,.18);text-align:center;position:relative;z-index:1;margin-bottom:4px;">Лаура Александровська</p>
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.1);text-align:center;position:relative;z-index:1;">CMO &middot; Marketing Architect</p>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,rgba(6,6,6,.6),transparent);border-radius:0 0 16px 16px;"></div>
+      </div>
+
+      <!-- Плашка 1: Досвід — 2 колонки -->
+      <div class="glass reveal d1" style="grid-column:span 2;padding:32px 36px;">
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;color:rgba(255,255,255,.22);font-weight:600;margin-bottom:14px;">Досвід</p>
+        <p style="font-size:clamp(13px,1.4vw,15px);line-height:1.82;color:rgba(255,255,255,.52);">
+          5 років практичного проектування маркетингових систем: від побудови команд з&nbsp;0 та запуску власного бізнесу до позиції CMO у великих компаніях.
+        </p>
+      </div>
+
+      <!-- Плашка 2: Операційна трансформація -->
+      <div class="glass reveal d2" style="padding:28px 30px;">
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;color:rgba(255,255,255,.22);font-weight:600;margin-bottom:14px;">Операційна трансформація</p>
+        <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.45);">
+          Перезапуск існуючих оргструктур, аудит ресурсів (час, фінанси, люди) та радикальна оптимізація витрат на основі Data-driven підходу.
+        </p>
+      </div>
+
+      <!-- Плашка 3: Рекрутинг-масштаб -->
+      <div class="glass reveal d3" style="padding:28px 30px;">
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;color:rgba(255,255,255,.22);font-weight:600;margin-bottom:14px;">Рекрутинг-масштаб</p>
+        <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.45);">
+          Досвід обробки воронок на 500+ кандидатів для формування елітних відділів маркетингу.
+        </p>
+      </div>
+
+      <!-- Плашка 4: Методологія -->
+      <div class="glass reveal d1" style="padding:28px 30px;">
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;color:rgba(255,255,255,.22);font-weight:600;margin-bottom:14px;">Методологія</p>
+        <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.45);">
+          Створення &laquo;Книги продажів&raquo; (86&nbsp;сторінок) та впровадження 12-крокових маркетингових воронок.
+        </p>
+      </div>
+
+      <!-- Плашка 5: Партнерства — 2 колонки -->
+      <div class="glass reveal d2" style="grid-column:span 2;padding:32px 36px;">
+        <p style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;color:rgba(255,255,255,.22);font-weight:600;margin-bottom:14px;">Партнерства</p>
+        <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.45);margin-bottom:16px;">
+          Досвід роботи та стратегічні рішення для брендів: OKKO, Fishka, Bank, ФК &laquo;Рух&raquo;.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="stag">OKKO</span><span class="stag">Fishka</span><span class="stag">Bank</span><span class="stag">ФК «Рух»</span>
+        </div>
+      </div>
+
+      <!-- Плашка 6: Діапазон — повна ширина -->
+      <div class="glass reveal d3" style="grid-column:span 3;padding:32px 36px;display:flex;align-items:center;gap:40px;">
+        <div style="flex-shrink:0;">
+          <p style="font-size:9px;text-transform:uppercase;letter-spacing:.3em;color:rgba(255,255,255,.22);font-weight:600;margin-bottom:8px;">Діапазон</p>
+          <p style="font-family:Unbounded,sans-serif;font-weight:800;font-size:clamp(1rem,2vw,1.5rem);color:#fff;white-space:nowrap;">Webhooks/API<br><span style="color:rgba(255,255,255,.22);font-weight:300;">&darr;</span><br>Глобальна стратегія</p>
+        </div>
+        <div style="width:1px;height:72px;background:rgba(255,255,255,.08);flex-shrink:0;"></div>
+        <p style="font-size:clamp(13px,1.4vw,15px);line-height:1.8;color:rgba(255,255,255,.45);">
+          Від технічної інтеграції через Webhooks/API до глобального стратегічного планування.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="sdivider"></div>
+
+<!-- ===========================
+     БЛОК 4: МАРКЕТИНГОВИЙ БУДИНОК
+=========================== -->
+<section id="house" style="position:relative;background:#0b0b0b;padding:130px 0;">
+  <div style="max-width:68rem;margin:0 auto;padding:0 40px;">
+
+    <div class="reveal" style="text-align:center;margin-bottom:72px;">
+      <div class="slabel" style="justify-content:center;margin-bottom:22px;">
+        <div class="sdot"></div><span>Інтерактивний концепт</span><div class="sdot"></div>
+      </div>
+      <h2 style="font-family:Unbounded,sans-serif;font-weight:900;color:#fff;font-size:clamp(2.2rem,5vw,5.5rem);line-height:1.05;margin-bottom:14px;">
+        Маркетинговий<br><em style="font-weight:300;font-style:normal;color:rgba(255,255,255,.18)">Будинок</em>
+      </h2>
+    </div>
+
+    <!-- SVG-схема будинку — інтерактивна -->
+    <div class="reveal d1" style="display:flex;justify-content:center;margin-bottom:52px;">
+      <svg id="hsvg" viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;width:100%;" role="img" aria-label="Схема Маркетингового Будинку">
+
+        <!-- ДАХ (Стратегія) — пов'язаний з акордеоном Фундамент -->
+        <g class="hpart" id="hp-roof" data-target="acc1" style="opacity:.4" onclick="triggerAcc('acc1')" role="button">
+          <polygon points="300,20 556,148 44,148" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.2)" stroke-width="1.5" stroke-linejoin="round"/>
+          <line x1="300" y1="20" x2="300" y2="148" stroke="rgba(255,255,255,.06)" stroke-width="1" stroke-dasharray="5,8"/>
+          <text x="300" y="107" text-anchor="middle" font-family="Unbounded" font-size="9" fill="rgba(255,255,255,.35)" letter-spacing="2" font-weight="700">СТРАТЕГІЯ</text>
+          <!-- Труба -->
+          <rect x="348" y="4" width="28" height="34" rx="2" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.13)" stroke-width="1"/>
+        </g>
+
+        <!-- СТІНИ — пов'язані з акордеоном Стіни -->
+        <g class="hpart" id="hp-walls" data-target="acc2" style="opacity:.4" onclick="triggerAcc('acc2')" role="button">
+          <rect x="44" y="148" width="512" height="108" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.13)" stroke-width="1.5"/>
+          <!-- Ліве вікно -->
+          <rect x="82" y="167" width="68" height="50" rx="2" fill="rgba(255,255,255,.025)" stroke="rgba(255,255,255,.13)" stroke-width="1"/>
+          <line x1="116" y1="167" x2="116" y2="217" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
+          <line x1="82" y1="192" x2="150" y2="192" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
+          <!-- Праве вікно -->
+          <rect x="450" y="167" width="68" height="50" rx="2" fill="rgba(255,255,255,.025)" stroke="rgba(255,255,255,.13)" stroke-width="1"/>
+          <line x1="484" y1="167" x2="484" y2="217" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
+          <line x1="450" y1="192" x2="518" y2="192" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
+          <!-- Двері -->
+          <rect x="258" y="196" width="84" height="60" rx="2" fill="rgba(255,255,255,.035)" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
+          <circle cx="332" cy="226" r="3" fill="rgba(255,255,255,.2)"/>
+          <!-- Label -->
+          <text x="300" y="182" text-anchor="middle" font-family="Unbounded" font-size="8.5" fill="rgba(255,255,255,.38)" letter-spacing="2.5" font-weight="600">КАНАЛИ / ПРОЦЕСИ / ТЕХНОЛОГІЇ</text>
+        </g>
+
+        <!-- ФУНДАМЕНТ -->
+        <g class="hpart" id="hp-found" data-target="acc1" style="opacity:.4" onclick="triggerAcc('acc1')" role="button">
+          <rect x="24" y="256" width="552" height="52" rx="3" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+          <text x="300" y="287" text-anchor="middle" font-family="Unbounded" font-size="10.5" fill="rgba(255,255,255,.62)" letter-spacing="3" font-weight="800">ФУНДАМЕНТ</text>
+        </g>
+        <line x1="44" y1="256" x2="556" y2="256" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+
+        <!-- Підписи -->
+        <text x="30" y="300" font-family="Inter Tight" font-size="7.5" fill="rgba(255,255,255,.16)" letter-spacing="1">01 · Стратегія, Аналітика, HR</text>
+        <text x="370" y="144" font-family="Inter Tight" font-size="7.5" fill="rgba(255,255,255,.16)" letter-spacing="1">02 · Стіни: Канали та Технології</text>
+      </svg>
+    </div>
+
+    <!-- АКОРДЕОН -->
+    <div style="display:flex;flex-direction:column;gap:12px;" class="reveal d2">
+
+      <!-- Пункт 1: Фундамент -->
+      <div class="accitem" id="acc1">
+        <button class="accbtn" onclick="triggerAcc('acc1')">
+          <span style="font-family:Unbounded,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;color:rgba(255,255,255,.18);flex-shrink:0;">01</span>
+          <div style="flex:1;text-align:left;">
+            <h3 style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:clamp(1.1rem,2.4vw,1.6rem);line-height:1.2;margin-bottom:4px;">Фундамент</h3>
+            <p style="font-size:12px;color:rgba(255,255,255,.28);">Стратегія, Аналітика та HR-базис</p>
+          </div>
+          <svg class="accicon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="1.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accc" style="border:1px solid rgba(255,255,255,.07);border-top:none;">
+          <div style="padding:36px 40px 44px;">
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;">
+              <div class="mcard">
+                <h4 style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:13px;margin-bottom:10px;">SOSTACK Model</h4>
+                <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.4);">Глибоке проектування стратегії (Situation, Objectives, Strategy, Tactics, Action, Control).</p>
+              </div>
+              <div class="mcard">
+                <h4 style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:13px;margin-bottom:10px;">Пошук точки G</h4>
+                <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.4);">Знаходження критичного вузла системи, де мінімальне зусилля створює максимальний прибуток та кратне масштабування.</p>
+              </div>
+              <div class="mcard">
+                <h4 style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:13px;margin-bottom:10px;">Економіка</h4>
+                <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.4);">Unit-економіка (LTV, CAC, ROMI), сегментація ЦА через тригери та психографію.</p>
+              </div>
+              <div class="mcard">
+                <h4 style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:13px;margin-bottom:10px;">Команда та Ресурс</h4>
+                <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.4);">Груповий та індивідуальний найм, система онбордингу 2.0. Аналіз ефективності оргструктури: людський, часовий та моральний ресурс. Розробка посадових інструкцій (KPI/OKR), що виключають дублювання функцій.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Пункт 2: Стіни -->
+      <div class="accitem" id="acc2">
+        <button class="accbtn" onclick="triggerAcc('acc2')">
+          <span style="font-family:Unbounded,sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;color:rgba(255,255,255,.18);flex-shrink:0;">02</span>
+          <div style="flex:1;text-align:left;">
+            <h3 style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:clamp(1.1rem,2.4vw,1.6rem);line-height:1.2;margin-bottom:4px;">Стіни</h3>
+            <p style="font-size:12px;color:rgba(255,255,255,.28);">Канали, Процеси та Технології</p>
+          </div>
+          <svg class="accicon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="1.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accc" style="border:1px solid rgba(255,255,255,.07);border-top:none;">
+          <div style="padding:36px 40px 44px;">
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;">
+              <div class="mcard">
+                <h4 style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:13px;margin-bottom:10px;">Infrastructure</h4>
+                <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.4);">Налаштування CRM-архітектури, де не втрачається жоден лід.</p>
+              </div>
+              <div class="mcard">
+                <h4 style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:13px;margin-bottom:10px;">Tech Stack</h4>
+                <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.4);">Складна інтеграція через API та Webhooks, створення мультилендингів та висококонверсійних сайтів.</p>
+              </div>
+              <div class="mcard">
+                <h4 style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:13px;margin-bottom:10px;">Ecosystem</h4>
+                <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.4);">Об'єднання соцмереж, реклами та контент-маркетингу в єдину мережу.</p>
+              </div>
+              <div class="mcard">
+                <h4 style="font-family:Unbounded,sans-serif;font-weight:700;color:#fff;font-size:13px;margin-bottom:10px;">Base of Knowledge</h4>
+                <p style="font-size:13px;line-height:1.78;color:rgba(255,255,255,.4);">Створення регламентів та бази знань, що робить бізнес незалежним від персоналій.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#0A0A0A;border-top:1px solid rgba(255,255,255,.06);">
+  <div style="max-width:80rem;margin:0 auto;padding:24px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <p style="font-family:Unbounded,sans-serif;font-weight:900;font-size:1.15rem;color:#fff;">Aleksandrovska<span style="color:rgba(255,255,255,.14)">.</span></p>
+    <p style="font-size:10px;text-transform:uppercase;letter-spacing:.25em;color:rgba(255,255,255,.15);">&copy; 2026 Aleksandrovska Hub &middot; Всі права захищені</p>
+  </div>
+</footer>
+
+<!-- ===========================
+     VANILLA JS
+=========================== -->
+<script>
+/* Lenis smooth scroll */
+var lenis;
+try {
+  lenis = new Lenis({ duration: 1.2, easing: function(t){ return Math.min(1,1.001-Math.pow(2,-10*t)); } });
+  (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0);
+} catch(e){}
+
+/* Anchor scroll */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    var id = a.getAttribute('href');
+    var el = document.querySelector(id);
+    if(!el) return;
+    e.preventDefault();
+    if(lenis) lenis.scrollTo(el,{offset:-72,duration:1.4});
+    else el.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+/* Nav scroll */
+var navEl = document.getElementById('nav');
+window.addEventListener('scroll', function(){ navEl.classList.toggle('scrolled', window.scrollY>64); }, {passive:true});
+
+/* Mobile burger */
+var burger = document.getElementById('burger');
+var mnavEl = document.getElementById('mnav');
+var open = false;
+burger.addEventListener('click', function(){
+  open = !open;
+  mnavEl.classList.toggle('open', open);
+  burger.style.opacity = open ? '.5' : '1';
+});
+function closeMenu(){ open=false; mnavEl.classList.remove('open'); }
+
+/* =====================
+   Interactive Grid Canvas
+   — Видима базова сітка
+   — Курсор: підсвічування + локальний вигин вузлів
+   — Скрол: хвилеподібний вигин усіх рядків
+   ===================== */
+(function(){
+  var canvas = document.getElementById('grid');
+  var ctx = canvas.getContext('2d');
+  var W, H;
+  var mx = -9999, my = -9999;
+  var CELL = 72;
+  var CURSOR_R  = 260;   /* радіус підсвічування */
+  var BEND_R    = 200;   /* радіус вигину вузлів від курсора */
+  var BEND_DIST = 28;    /* максимальне зміщення вузла */
+  var scrollY   = 0;
+  var targetScrollY = 0;
+  var rafId;
+
+  function resize(){
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    draw();
+  }
+
+  /* Повертає зміщений вузол сітки з урахуванням курсора та скролу */
+  function node(c, r){
+    var bx = c * CELL;
+    var by = r * CELL;
+
+    /* Хвиля від скролу: sin по колонках, зсув по рядках */
+    var wave = Math.sin((bx / W) * Math.PI * 3 + scrollY * 0.012) * (scrollY * 0.06);
+    var waveCap = Math.min(Math.abs(wave), 54) * Math.sign(wave);
+    by += waveCap;
+
+    /* Локальний вигин від курсора */
+    if(mx > -999){
+      var dx = bx - mx, dy = by - my;
+      var d  = Math.sqrt(dx*dx + dy*dy);
+      if(d < BEND_R && d > 0){
+        var push = (1 - d/BEND_R);
+        push = push * push;
+        var scale = push * BEND_DIST;
+        bx += (dx/d) * scale;
+        by += (dy/d) * scale;
+      }
+    }
+    return {x: bx, y: by};
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var cols = Math.ceil(W/CELL) + 2;
+    var rows = Math.ceil(H/CELL) + 2;
+
+    /* ---- горизонтальні лінії ---- */
+    for(var r = 0; r <= rows; r++){
+      ctx.beginPath();
+      for(var c = 0; c <= cols; c++){
+        var p = node(c, r);
+        if(c === 0) ctx.moveTo(p.x, p.y);
+        else        ctx.lineTo(p.x, p.y);
+
+        /* Альфа по близькості курсора */
+        var dx = c*CELL - mx, dy = r*CELL - my;
+        var d  = Math.sqrt(dx*dx + dy*dy);
+        var g  = (mx > -999) ? Math.max(0, 1 - d/CURSOR_R) : 0;
+        var alpha = 0.10 + g * 0.55;
+        ctx.strokeStyle = 'rgba(255,255,255,' + alpha.toFixed(3) + ')';
+        ctx.lineWidth   = 0.6 + g * 1.8;
+      }
+      ctx.stroke();
+    }
+
+    /* ---- вертикальні лінії ---- */
+    for(var c = 0; c <= cols; c++){
+      ctx.beginPath();
+      for(var r = 0; r <= rows; r++){
+        var p = node(c, r);
+        if(r === 0) ctx.moveTo(p.x, p.y);
+        else        ctx.lineTo(p.x, p.y);
+      }
+      var dx2 = c*CELL - mx, dy2 = (rows/2)*CELL - my;
+      var d2  = Math.sqrt(dx2*dx2 + dy2*dy2);
+      var g2  = (mx > -999) ? Math.max(0, 1 - d2/CURSOR_R) : 0;
+      var alpha2 = 0.10 + g2 * 0.55;
+      ctx.strokeStyle = 'rgba(255,255,255,' + alpha2.toFixed(3) + ')';
+      ctx.lineWidth   = 0.6 + g2 * 1.8;
+      ctx.stroke();
+    }
+
+    /* ---- градієнтне затухання по краях ---- */
+    var fade = ctx.createRadialGradient(W/2, H*0.4, H*0.05, W/2, H*0.4, Math.max(W,H)*0.72);
+    fade.addColorStop(0,   'rgba(0,0,0,0)');
+    fade.addColorStop(0.6, 'rgba(10,10,10,0)');
+    fade.addColorStop(1,   'rgba(10,10,10,0.88)');
+    ctx.fillStyle = fade;
+    ctx.fillRect(0,0,W,H);
+
+    /* Затухання знизу */
+    var fadeB = ctx.createLinearGradient(0, H*0.55, 0, H);
+    fadeB.addColorStop(0, 'rgba(10,10,10,0)');
+    fadeB.addColorStop(1, 'rgba(10,10,10,1)');
+    ctx.fillStyle = fadeB;
+    ctx.fillRect(0,0,W,H);
+  }
+
+  /* RAF-петля для плавного скролу */
+  function loop(){
+    var diff = targetScrollY - scrollY;
+    if(Math.abs(diff) > 0.3){
+      scrollY += diff * 0.08;
+      draw();
+    }
+    rafId = requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', resize);
+
+  window.addEventListener('scroll', function(){
+    targetScrollY = window.scrollY;
+  }, {passive:true});
+
+  document.addEventListener('mousemove', function(e){
+    var r = canvas.getBoundingClientRect();
+    mx = e.clientX - r.left;
+    my = e.clientY - r.top;
+    draw();
+  });
+  document.addEventListener('mouseleave', function(){ mx=-9999; my=-9999; draw(); });
+
+  resize();
+  loop();
+})();
+
+/* Scroll Reveal */
+var revEls = document.querySelectorAll('.reveal');
+var ioObs = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('vis'); ioObs.unobserve(e.target); } });
+},{threshold:.08, rootMargin:'-36px'});
+revEls.forEach(function(el){ ioObs.observe(el); });
+
+/* SVG hover */
+document.querySelectorAll('.hpart').forEach(function(p){
+  p.addEventListener('mouseenter', function(){
+    document.querySelectorAll('.hpart').forEach(function(x){ x.style.opacity='.22'; });
+    p.style.opacity='1';
+  });
+  p.addEventListener('mouseleave', function(){
+    document.querySelectorAll('.hpart').forEach(function(x){ x.style.opacity='.4'; });
+  });
+});
+
+/* Accordion */
+function triggerAcc(id){
+  var item = document.getElementById(id);
+  if(!item) return;
+  var wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.accitem').forEach(function(i){
+    i.classList.remove('open');
+    i.querySelector('.accc').classList.remove('open');
+  });
+  if(!wasOpen){
+    item.classList.add('open');
+    item.querySelector('.accc').classList.add('open');
+    setTimeout(function(){
+      if(lenis) lenis.scrollTo(item,{offset:-100,duration:1.2});
+      else item.scrollIntoView({behavior:'smooth',block:'start'});
+    },60);
+  }
+}
+document.querySelectorAll('.accitem').forEach(function(item){
+  item.querySelector('.accbtn').addEventListener('click', function(){ triggerAcc(item.id); });
+});
+
+
+</script>
+
+</body>
+</html>

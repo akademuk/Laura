@@ -16,6 +16,24 @@ const nextConfig: NextConfig = {
   // Uncomment for GitHub Pages deploy:
   // output: 'export',
   // basePath: '/Laura',
+
+  /**
+   * Serve the standalone HTML landing (pure HTML5 + Tailwind CDN, fully isolated
+   * from the Next.js app styles) at the clean /aleksandrovska-hub URL.
+   */
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/aleksandrovska-hub',
+          destination: '/aleksandrovska-hub/index.html',
+        },
+      ],
+    };
+  },
 };
+
+export default nextConfig;
+
 
 export default nextConfig;
